@@ -142,3 +142,49 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+.participants-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.participants-section ul {
+  list-style-type: none;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0 0 0;
+  /* Hide default bullet points */
+  list-style: none;
+}
+
+.participants-section li {
+  padding: 0.25rem 0 0.25rem 0.5rem;
+  color: #555;
+  font-size: 0.9rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.participants-section li:before {
+  content: "";
+  display: none;
+}
+
+.delete-icon {
+  margin-left: 0.5rem;
+  color: #c62828;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: color 0.2s;
+}
+
+.delete-icon:hover {
+  color: #a31515;
+}
+
+.no-participants {
+  color: #999;
+  font-style: italic;
+  margin: 0.5rem 0;
+}

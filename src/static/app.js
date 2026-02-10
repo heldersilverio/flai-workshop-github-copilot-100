@@ -20,11 +20,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Format participants list with delete icon
+        const participantsList = details.participants.length > 0
+          ? `<ul class="participants-list">${details.participants.map(p => `
+              <li>
+                <span class="participant-email">${p}</span>
+                <span class="delete-icon" title="Remove participant" data-activity="${name}" data-email="${p}">&#128465;</span>
+              </li>
+            `).join("")}</ul>`
+          : "<p class='no-participants'>No participants yet</p>";
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <strong>Current Participants:</strong>
+            ${participantsList}
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
@@ -81,6 +95,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Add event listeners for delete icons
+  function addDeleteIconListeners() {
+    document.querySelectorAll(".delete-icon").forEach(icon => {
+      icon.addEventListener("click", async (e) => {
+        const activity = icon.getAttribute("data-activity");
+        const email = icon.getAttribute("data-email");
+        if (!activity || !email) return;
+        if (!confirm(`Remove ${email} from ${activity}?`)) return;
+        try {
+          const response = await fetch(`/activities/${encodeURIComponent(activity)}/participants/${encodeURIComponent(email)}`, {
+            method: "DELETE"
+          });
+          if (!response.ok) {
+            throw new Error("Failed to remove participant.");
+          }
+          fetchActivities(); // Refresh list
+        } catch (err) {
+          alert("Error removing participant.");
+        }
+      });
+    });
+  }
+
   // Initialize app
   fetchActivities();
+  // After activities are rendered, add delete icon listeners
+  addDeleteIconListeners();
 });
